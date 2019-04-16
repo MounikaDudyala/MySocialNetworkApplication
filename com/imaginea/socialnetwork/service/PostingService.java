@@ -29,9 +29,24 @@ public class PostingService {
 
 	}
 
-	public List<String> retrivePosts(String username) {
+	public void retrivePosts(String username) {
 
-		return usersPostMap.get(username);
+		List<String> postings = usersPostMap.get(username);
+		System.out.println("Posts of " + username);
+		print(postings);
+	}
+
+	public void postsOfFriends(String username) {
+		List<String> ListOfFriends = FriendsService.getInstance().namesOffriends(username);
+		for (String friendName : ListOfFriends) {
+			String usernameOffriend = friendName;
+			retrivePosts(usernameOffriend);
+
+		}
+	}
+
+	private static void print(List<String> strings) {
+		System.out.println(strings);
 	}
 
 	public static PostingService getInstance() {

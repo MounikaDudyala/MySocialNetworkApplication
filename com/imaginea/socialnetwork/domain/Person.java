@@ -20,51 +20,59 @@ public class Person {
 	private List<AcadamicInfo> acadamicDetails;
 	private List<PersonWorkExperience> workDetails;
 	private List<Person> friends;
-	PostingService postService = new PostingService();
-	FriendsService friendsService = new FriendsService();
+	private List<String> posts;
 	Scanner scanner = new Scanner(System.in);
+
 	public void addPost(String username) {
-		if(username==null)
+		if (username == null)
 			throw new RuntimeException("give username");
 		PostingService.getInstance().addPost(username);
 	}
 
-	public List<String> retrivePosts(String username) {
-		if(username==null)
+	public void retrivePosts(String username) {
+		if (username == null)
 			throw new RuntimeException("give username");
-		return PostingService.getInstance().retrivePosts(username);
+		PostingService.getInstance().retrivePosts(username);
+
 	}
 
 	public void addfriends(String username) {
-		if(username==null)
+		if (username == null)
 			throw new RuntimeException("give username");
-		FriendsService.getInstance().addfriend(username);
+		System.out.println("give friends name");
+		String friendName = scanner.next();
+		FriendsService.getInstance().addfriend(username,friendName);
 	}
 
-	public List<String> retrivefriends(String username) {
-		if(username==null)
+	public void retriveFriends(String username) {
+		if (username == null)
 			throw new RuntimeException("give username");
-		return FriendsService.getInstance().retrivefriends(username);
+		FriendsService.getInstance().retriveFriends(username);
 
 	}
 
-	public void sendRequests(String username) {
-		if(username==null)
+	public void PostsOfFriends(String username) {
+		if (username == null)
 			throw new RuntimeException("give username");
-		List<String> requestSend = FriendsService.getInstance().sendRequests(username);
-		for (String request : requestSend) {
-			System.out.println(request);
-		}
+		PostingService.getInstance().postsOfFriends(username);
+
 	}
 
-	public void accept(String username) {
-		if(username==null)
+	public void sentRequests(String username) {
+		if (username == null)
 			throw new RuntimeException("give username");
-		FriendsService.getInstance().accept(username);
+		FriendsService.getInstance().sentRequests(username);
+
+	}
+
+	public void acceptOrReject(String username) {
+		if (username == null)
+			throw new RuntimeException("give username");
+		FriendsService.getInstance().acceptOrReject(username);
 	}
 
 	public void profile(String username) {
-		if(username==null)
+		if (username == null)
 			throw new RuntimeException("give username");
 		Optional<Person> person = UsersRepository.getInstance().retrievePersonBasedOnUsername(username);
 		System.out.println(person.get().personalInfo.toString());
@@ -73,20 +81,21 @@ public class Person {
 		System.out.println(person.get().hobbies);
 		System.out.println(person.get().acadamicDetails);
 		System.out.println(person.get().workDetails);
-		
 
+	}
+
+	public void friendsProfile(String username) {
+		FriendsService.getInstance().friendsProfile(username);
+	}
+
+	public void mutualFriends(String username) {
+		System.out.println("give friendName");
+		String friendName = scanner.next();
+		FriendsService.getInstance().MutualFriends(username, friendName);
 	}
 
 	public String uniqueIdentifier() {
 		return personalInfo.getEmail();
-	}
-
-	public List<String> namesOfTheFriends() {
-		return friends.stream().map(p -> p.personalInfo.name()).collect(Collectors.toList());
-	}
-
-	public List<Person> friends() {
-		return friends;
 	}
 
 	public Person(Registration registration) {

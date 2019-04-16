@@ -10,13 +10,11 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.imaginea.socialnetwork.data.AuthenticationData;
-import com.imaginea.socialnetwork.data.PredicateContainer;
 import com.imaginea.socialnetwork.data.UsersRepository;
 import com.imaginea.socialnetwork.domain.Gender;
 import com.imaginea.socialnetwork.domain.PersonalInfo;
 import com.imaginea.socialnetwork.registration.Registration;
 import com.imaginea.socialnetwork.service.AuthenticationService;
-
 
 public class SocialNetworkEndpoint {
 
@@ -123,24 +121,26 @@ public class SocialNetworkEndpoint {
 		System.out.println("7.Posts of me");
 		System.out.println("8.add friend");
 		System.out.println("9.Friends List");
-		System.out.println("10.Logout");
+		System.out.println("10.Friends Profile");
+		System.out.println("11.MutualFriends");
+		System.out.println("12.Logout");
 		switch (scanner.nextInt()) {
 
 		case 1:
 			landOnHome(username);
-			//posts of friends
+			// posts of friends
 			break;
 		case 2:
-			person.addPost(username);
+			addPost(username);
 			break;
 		case 3:
-			person.sendRequests(username);
+			sentRequests(username);
 			break;
 		case 4:
-			person.accept(username);
-		
+			acceptOrRejectARequest(username);
+			break;
 		case 5:
-			person.profile(username);
+			profile(username);
 			break;
 		case 6:
 			usersList();
@@ -149,12 +149,18 @@ public class SocialNetworkEndpoint {
 			postsOfMe(username);
 			break;
 		case 8:
-			person.addfriends(username);
-			  break;
+			addFriends(username);
+			break;
 		case 9:
-			 friendsOfMe(username);
-			  break;
+			friendsOfMe(username);
+			break;
 		case 10:
+			friendsProfile(username);
+			break;
+		case 11:
+			mutualFriends(username);
+			break;
+		case 12:
 			logout(username);
 			break;
 
@@ -170,16 +176,15 @@ public class SocialNetworkEndpoint {
 
 	}
 
-	public static void landOnHome(String username) {
-		if(username==null)
+	private static void landOnHome(String username) {
+		if (username == null)
 			throw new RuntimeException("give username");
-		List<String> ListOfFriends = person.retrivefriends(username);
-		for (String list : ListOfFriends) {
-			String usernameOffriends = list;
-            List<String> postsOfFriends=  person.retrivePosts(usernameOffriends);
-            print(postsOfFriends);
-		}
+		postsOfFriends(username);
 
+	}
+
+	private static void postsOfFriends(String username) {
+		person.PostsOfFriends(username);
 	}
 
 	private static void logout(final String username) {
@@ -191,26 +196,44 @@ public class SocialNetworkEndpoint {
 	}
 
 	private static void postsOfMe(String username) {
-		List<String> postings = person.retrivePosts(username);
-		System.out.println("Posts of"+username);
-		print(postings);
+		person.retrivePosts(username);
 	}
 
 	private static void friendsOfMe(String username) {
-		retriveFriends(username);
-		
+		person.retriveFriends(username);
+
 	}
-	private static void print(List<String> strings) {
-		System.out.println(strings);
+
+	private static void addPost(String username) {
+		person.addPost(username);
 	}
-  private static void retriveFriends(String username)
-  {
-	  List<String> friendsList=person.retrivefriends(username);
-	  print(friendsList);
-  }
+
+	private static void sentRequests(String username) {
+		person.sentRequests(username);
+	}
+
+	private static void acceptOrRejectARequest(String username) {
+		person.acceptOrReject(username);
+	}
+
+	private static void addFriends(String username) {
+		person.addfriends(username);
+	}
+
+	private static void profile(String username) {
+		person.profile(username);
+	}
+
+	private static void friendsProfile(String username) {
+		person.friendsProfile(username);
+	}
+
+	private static void mutualFriends(String username) {
+		person.mutualFriends(username);
+	}
+
 	private static void register(Registration registration, String username, String password) {
 
-		
 		List<String> errors = validate(registration);
 
 		if (!errors.isEmpty()) {
