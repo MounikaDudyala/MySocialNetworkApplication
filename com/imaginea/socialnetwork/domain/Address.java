@@ -9,6 +9,7 @@ public class Address {
 	public String zipcode;
 
 	public Address() {
+		
 	}
 
 }

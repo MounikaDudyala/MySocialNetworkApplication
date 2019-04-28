@@ -13,18 +13,21 @@ import com.imaginea.socialnetwork.domain.Person;
 
 public class FriendsService {
 	private static FriendsService INSTANCE = new FriendsService();
+	public static char YES='Y';
+	public static char No='N';
 	Scanner scanner = new Scanner(System.in);
-	Person person = new Person();
+	ProfileService profileService = new ProfileService();
 	private static Map<String, String> FriendRequestsMap = new ConcurrentHashMap<>();
 	private static Map<String, List<String>> SentRequestsMap = new ConcurrentHashMap<>();
 	private static Map<String, List<String>> friendsListMap = new ConcurrentHashMap<>();
 	List<String> friendsListOfUser = new ArrayList<>();
 	List<String> friendsListOfFriend = new ArrayList<>();
 
-	public void addfriend(String username, String friendName) {
+	public void addfriend(String username) {
 		if (username == null)
 			throw new RuntimeException("give username");
 		int count = 0;
+		String friendName = scanner.next();
 		if (friendName == null)
 			throw new RuntimeException("give valid friend name");
 		List<Person> personlist = UsersRepository.getInstance().ListofUsers();
@@ -40,29 +43,27 @@ public class FriendsService {
 		}
 		if (count == 0)
 			System.out.println("user not exists");
-		System.out.println("do u want to add another friend(Y/N)");
-
 		SentRequestsMap.put(username, friendsListOfUser);
 
 	}
 
-	public void retriveFriends(String username) {
+	public void printFriendsNames(String username) {
 
 		List<String> friendsList = friendsListMap.get(username);
 		print(friendsList);
 
 	}
 
-	public List<String> namesOffriends(String username) {
+	public List<String> retriveNamesOffriends(String username) {
 		List<String> friendsList = friendsListMap.get(username);
 		return friendsList;
 	}
 
 	public void friendsProfile(String username) {
-		retriveFriends(username);
+		printFriendsNames(username);
 		System.out.println("whom profile you wants to see");
 		String friendName = scanner.next();
-		person.profile(friendName);
+		profileService.profile(friendName);
 
 	}
 
@@ -76,7 +77,9 @@ public class FriendsService {
 		String friend = FriendRequestsMap.get(username);
 		System.out.println("do you want to accept" + friend + "(Y/N)");
 		String answer = scanner.next();
-		if (answer.equals("Y")) {
+		if(answer==null)
+			throw new RuntimeException("please enter your choice");
+		if (answer.equals(YES)) {
 			acceptRequest(username);
 		} else
 			rejectRequest(username);
@@ -96,7 +99,9 @@ public class FriendsService {
 		System.out.println("friend request rejected");
 	}
 
-	public void MutualFriends(String username, String friendName) {
+	public void MutualFriends(String username) {
+		System.out.println("give friendName");
+		String friendName = scanner.next();
 		List<String> friendslist1 = friendsListMap.get(username);
 		List<String> friendslist2 = friendsListMap.get(friendName);
 		for (String name1 : friendslist1) {

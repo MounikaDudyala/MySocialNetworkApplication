@@ -21,82 +21,6 @@ public class Person {
 	private List<PersonWorkExperience> workDetails;
 	private List<Person> friends;
 	private List<String> posts;
-	Scanner scanner = new Scanner(System.in);
-
-	public void addPost(String username) {
-		if (username == null)
-			throw new RuntimeException("give username");
-		PostingService.getInstance().addPost(username);
-	}
-
-	public void retrivePosts(String username) {
-		if (username == null)
-			throw new RuntimeException("give username");
-		PostingService.getInstance().retrivePosts(username);
-
-	}
-
-	public void addfriends(String username) {
-		if (username == null)
-			throw new RuntimeException("give username");
-		System.out.println("give friends name");
-		String friendName = scanner.next();
-		FriendsService.getInstance().addfriend(username,friendName);
-	}
-
-	public void retriveFriends(String username) {
-		if (username == null)
-			throw new RuntimeException("give username");
-		FriendsService.getInstance().retriveFriends(username);
-
-	}
-
-	public void PostsOfFriends(String username) {
-		if (username == null)
-			throw new RuntimeException("give username");
-		PostingService.getInstance().postsOfFriends(username);
-
-	}
-
-	public void sentRequests(String username) {
-		if (username == null)
-			throw new RuntimeException("give username");
-		FriendsService.getInstance().sentRequests(username);
-
-	}
-
-	public void acceptOrReject(String username) {
-		if (username == null)
-			throw new RuntimeException("give username");
-		FriendsService.getInstance().acceptOrReject(username);
-	}
-
-	public void profile(String username) {
-		if (username == null)
-			throw new RuntimeException("give username");
-		Optional<Person> person = UsersRepository.getInstance().retrievePersonBasedOnUsername(username);
-		System.out.println(person.get().personalInfo.toString());
-		System.out.println(person.get().friends);
-		System.out.println(person.get().interests);
-		System.out.println(person.get().hobbies);
-		System.out.println(person.get().acadamicDetails);
-		System.out.println(person.get().workDetails);
-
-	}
-
-	public void friendsProfile(String username) {
-		FriendsService.getInstance().friendsProfile(username);
-	}
-
-	public void mutualFriends(String username) {
-		System.out.println("give friendName");
-		String friendName = scanner.next();
-		FriendsService.getInstance().MutualFriends(username, friendName);
-	}
-
-	public String uniqueIdentifier() {
-		return personalInfo.getEmail();
-	}
 
 	public Person(Registration registration) {
 		this.personalInfo = registration.getPersonalInfo();
@@ -108,17 +32,18 @@ public class Person {
 	public PersonalInfo getPersonalInfo() {
 		return personalInfo;
 	}
-
+	public String uniqueIdentifier() {
+		return personalInfo.getEmail();
+	}
 	public boolean isUserNameMatchingTo(final String username) {
 		return this.personalInfo.isUserNameMatchingTo(username);
 	}
-
-	public boolean isEmailEqualTo(String email) {
-		if (this.personalInfo == null)
-			return false;
-		return this.personalInfo.isEmailEqualTo(email);
-	}
-
+public void profile(String username)
+{
+	Optional<Person> person = UsersRepository.getInstance().retrievePersonBasedOnUsername(username);
+	System.out.println(person.get().toString());
+	
+}
 	@Override
 	public String toString() {
 		return "Person [personalInfo=" + personalInfo + ", address=" + address + ", interests=" + interests
